@@ -15,14 +15,12 @@ case class Request(wordToSearch: String, neighbours: Int, urls: List[String])
 class ConcondancerActor(id: Int, bookUrl: String) extends Actor {
   @tailrec
   val readBookFromUrl : (String, List[String]) => String = (url, encodings) => {
-    // TODO check in field meta-charset if chosen charset was really correct
     try {
       Source.fromURL(url, encodings.head).mkString
     } catch {
-      case e: Exception => {
+      case e: Exception =>
         println(bookUrl + ": not encoding " + encodings.head)
         readBookFromUrl(url, encodings.tail)
-      }
     }
   }
 
@@ -40,7 +38,7 @@ class ConcondancerActor(id: Int, bookUrl: String) extends Actor {
     case Job(wordToSearch, neighbours) => {
       println(id + " [" + bookUrl + "] Finding conconcanders for word: " + wordToSearch)
       val result = Concordancer.findConcordances(wordToSearch, preparedBook, neighbours)
-      println(id + " [" + bookUrl + "] Found word " + wordToSearch + " " + result.size + " times")
+      println(id + " [" + bookUrl + "] Found word '" + wordToSearch + "' " + result.size + " times")
       sender ! result
     }
   }

@@ -16,7 +16,7 @@ object Concordancer {
     text.replaceAll("""<(?!\/?(?=>|\s.*>))\/?.*?>""", "")
 
   val removeMultipleWhiteChars : String => String = (text) =>
-    text.replaceAll("""  """, "")
+    text.replaceAll("""\s{2,}""", " ")
 
   val prepareBook : String => String = replaceNewLineChars andThen removePagesTags andThen extractParagraphs andThen
     removeTagsInParagraphs andThen removeMultipleWhiteChars

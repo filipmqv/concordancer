@@ -14,14 +14,8 @@ object Client extends App {
   val system = ActorSystem("ClientSystem", ConfigFactory.load("client"))
   val remoteActor = system.actorSelection("akka.tcp://RemoteActorSystem@127.0.0.1:9001/user/RemoteActor")
 
-  /*val urls = List(
-    "http://www.gutenberg.org/files/2554/2554-h/2554-h.htm",    //CRIME AND PUNISHMENT
-    "http://www.gutenberg.org/files/706/706-h/706-h.htm",       //THE AMATEUR CRACKSMAN
-    "http://www.gutenberg.org/cache/epub/9806/pg9806.html",     //MR. JUSTICE RAFFLES
-    "http://www.gutenberg.org/files/707/707-h/707-h.htm"        //RAFFLES FURTHER ADVENTURES OF THE AMATEUR CRACKSMAN
-  )*/
-
   val urls = List(
+    // uncomment to use other books
     "http://tomasz.fabisiak.pl/concordancer/1.html",
     "http://tomasz.fabisiak.pl/concordancer/2.html",
     "http://tomasz.fabisiak.pl/concordancer/3.html",
@@ -41,8 +35,9 @@ object Client extends App {
 
   println("That 's remote:" + remoteActor)
   val future = remoteActor ? Request("home", 6, urls)
-  println(" ask sent")
-  val result = Await.result(future, Duration.Inf)
+  println("Ask sent")
+  val result = Await.result(future, Duration.Inf).asInstanceOf[List[String]]
   println(result)
-  println("Number of results: " + result.asInstanceOf[List[String]].size)
+  result foreach {println(_)}
+  println("Number of results: " + result.size)
 }
